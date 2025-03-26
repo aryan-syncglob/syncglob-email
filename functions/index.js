@@ -42,7 +42,7 @@ async function verifyRecaptcha(token) {
 }
 
 app.post("/contact", async (req, res) => {
-  const { name, emailFrom, emailTo, message, recaptchaToken } = req.body;
+  const { name, emailFrom, message, recaptchaToken } = req.body;
 
   if (!name || !emailFrom || !message || !recaptchaToken) {
     return res.status(400).json({ message: "All fields are required" });
@@ -55,7 +55,7 @@ app.post("/contact", async (req, res) => {
 
   const mailOptions = {
     from: emailFrom,
-    to: `${emailTo}`,
+    to: `hr@syncglob.com`,
     subject: `New Contact Form Submission from ${name}`,
     text: `
         Name: ${name}
