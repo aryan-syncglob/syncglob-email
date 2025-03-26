@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "sg-store-67a8b",
+    "prod": "syncglob-833e6"
+  },
+  "targets": {},
+  "etags": {}
+}
