@@ -15,11 +15,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
+  service: 'gmail',
   auth: {
-    user: "kaia.feil@ethereal.email",
-    pass: "kd8JsAf6WuGgT7mYUh",
+    user: "syncglobdev@gmail.com",
+    pass: "grmk hlho zopv bptk",
   },
 });
 
@@ -42,7 +41,7 @@ async function verifyRecaptcha(token) {
 }
 
 app.post("/contact", async (req, res) => {
-  const { name, emailFrom, message, recaptchaToken } = req.body;
+  const { name, emailFrom, message, recaptchaToken, phone } = req.body;
 
   if (!name || !emailFrom || !message || !recaptchaToken) {
     return res.status(400).json({ message: "All fields are required" });
@@ -53,15 +52,27 @@ app.post("/contact", async (req, res) => {
     return res.status(400).json({ message: "Please re-verify captha" });
   }
 
+  const phoneValue = phone ? phone : "N/A";
   const mailOptions = {
     from: emailFrom,
     to: `hr@syncglob.com`,
     subject: `New Contact Form Submission from ${name}`,
-    text: `
-        Name: ${name}
-        Email: ${emailFrom}
-        Message: ${message}
-      `,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+        <div style="max-width: 600px; background: #ffffff; padding: 20px; border-radius: 8px; 
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin: auto;">
+          <h2 style="color: #333; text-align: center;">New Contact Form Submission</h2>
+          <p style="color: #555; font-size: 16px;">You have received a new message from the contact form.</p>
+          <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 10px;">
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Phone:</strong> ${phoneValue}</p>
+            <p><strong>Email:</strong> ${emailFrom}</p>
+            <p><strong>Message:</strong></p>
+            <p>${message}</p>
+          </div>
+        </div>
+      </div>
+    `,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
